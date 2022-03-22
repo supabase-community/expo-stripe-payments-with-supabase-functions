@@ -45,7 +45,7 @@ const functions = {
 export default function PaymentScreen({ session }: { session: Session }) {
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [paymentSheetEnabled, setPaymentSheetEnabled] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [clientSecret, setClientSecret] = useState<string>();
 
   useEffect(() => {
@@ -57,7 +57,6 @@ export default function PaymentScreen({ session }: { session: Session }) {
         urlScheme: "supabase-stripe-example",
         setUrlSchemeOnAndroid: true,
       });
-      setLoading(false);
       initialisePaymentSheet();
     }
     initialize();
@@ -107,6 +106,7 @@ export default function PaymentScreen({ session }: { session: Session }) {
   };
 
   const initialisePaymentSheet = async () => {
+    setLoading(true);
     const { paymentIntent, ephemeralKey, customer } =
       await fetchPaymentSheetParams();
 
@@ -154,6 +154,7 @@ export default function PaymentScreen({ session }: { session: Session }) {
         error.message
       );
     }
+    setLoading(false);
   };
 
   return (
@@ -164,6 +165,14 @@ export default function PaymentScreen({ session }: { session: Session }) {
           disabled={!paymentSheetEnabled}
           title="Checkout"
           onPress={openPaymentSheet}
+        />
+      </View>
+      <View style={[styles.verticallySpaced, styles.mt20]}>
+        <Button
+          loading={loading}
+          disabled={paymentSheetEnabled}
+          title="Restart Demo"
+          onPress={initialisePaymentSheet}
         />
       </View>
       <View style={[styles.verticallySpaced]}>
