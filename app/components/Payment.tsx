@@ -8,6 +8,7 @@ import {
 import { StyleSheet, View, Alert } from "react-native";
 import { Button } from "react-native-elements";
 import { Session } from "@supabase/supabase-js";
+import { supabase } from "../lib/supabase";
 
 // This will be bundled in `supabase.functions`
 const functions = {
@@ -163,6 +164,13 @@ export default function PaymentScreen({ session }: { session: Session }) {
           disabled={!paymentSheetEnabled}
           title="Checkout"
           onPress={openPaymentSheet}
+        />
+      </View>
+      <View style={[styles.verticallySpaced]}>
+        <Button
+          loading={loading}
+          title="Sign out"
+          onPress={() => supabase.auth.signOut()}
         />
       </View>
     </View>
