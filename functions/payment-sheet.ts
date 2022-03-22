@@ -9,7 +9,7 @@ import {
 import Stripe from "https://esm.sh/stripe?target=deno";
 
 // Import Supabase client
-import { createClient } from "https://cdn.skypack.dev/@supabase/supabase-js";
+import { createClient } from "https://cdn.skypack.dev/@supabase/supabase-js@^1.31.2";
 
 const stripe = Stripe(
   // TODO move to env var
@@ -27,24 +27,16 @@ console.log(`HTTP webserver running.  Access it at:  http://localhost:8000/`);
 
 // This handler will be called for every incoming request.
 const handler: Handler = async (request) => {
-  // [START] functions-utilities-js
-  const jwt = (request.headers.get("Authorization") ?? "").split("Bearer ")[1];
-  console.log(jwt);
-  if (!jwt)
-    return new Response(JSON.stringify({ error: "No JWT found" }), {
-      status: 200,
-    });
   const supabase = createClient(
     "https://ezkbryeecvynphnrwzhb.supabase.co",
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6a2JyeWVlY3Z5bnBobnJ3emhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDc4OTM4MTksImV4cCI6MTk2MzQ2OTgxOX0.foNTSYfaSk-9ydt2LX0TJOC19nRWaKvAKTsPsOZlMpI",
-    { autoRefreshToken: false, persistSession: false, fetch: fetch }
+    { headers: { Authorization: request.headers.get("Authorization") } }
   );
-  supabase.auth.setAuth(jwt);
-  // [END] functions-utilities-js
 
   // @ts-expect-error: deno doenst like that Postgrestfilterbuilder doesn't return a promise
   const { data, error } = await supabase.from("customers").select("*").single();
   console.log(data, error);
+  if (error) return new Response(JSON.stringify(error), { status: 200 });
   const customer = data.stripe_customer_id;
 
   const ephemeralKey = await stripe.ephemeralKeys.create(
