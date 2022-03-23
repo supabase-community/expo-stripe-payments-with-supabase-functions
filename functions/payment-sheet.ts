@@ -28,8 +28,12 @@ console.log(`HTTP webserver running.  Access it at:  http://localhost:8000/`);
 // This handler will be called for every incoming request.
 const handler: Handler = async (request) => {
   const supabase = createClient(
+    // Supabase API URL
     "https://ezkbryeecvynphnrwzhb.supabase.co",
+    // Supabase API ANON KEY
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6a2JyeWVlY3Z5bnBobnJ3emhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDc4OTM4MTksImV4cCI6MTk2MzQ2OTgxOX0.foNTSYfaSk-9ydt2LX0TJOC19nRWaKvAKTsPsOZlMpI",
+    // Create client with Auth context of the user that called the function.
+    // This way your row-level-security (RLS) policies are applied.
     { headers: { Authorization: request.headers.get("Authorization") } }
   );
 
