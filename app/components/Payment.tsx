@@ -10,38 +10,6 @@ import { Button } from "react-native-elements";
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
 
-// This will be bundled in `supabase.functions`
-const functions = {
-  invoke: async (
-    functionName: string,
-    invokeOptions: {
-      url: string;
-      headers: { [key: string]: string };
-      body?:
-        | Blob
-        | BufferSource
-        | FormData
-        | URLSearchParams
-        | ReadableStream<Uint8Array>
-        | string;
-    }
-  ): Promise<{ data: any | null; error: Error | null }> => {
-    try {
-      const { url, headers, body } = invokeOptions;
-      const response = await fetch(`${url}/${functionName}`, {
-        method: "POST",
-        headers,
-        body,
-      });
-
-      const data = await response.json();
-      return { data, error: null };
-    } catch (error: any) {
-      return { data: null, error };
-    }
-  },
-};
-
 export default function PaymentScreen({ session }: { session: Session }) {
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [paymentSheetEnabled, setPaymentSheetEnabled] = useState(false);
@@ -65,14 +33,11 @@ export default function PaymentScreen({ session }: { session: Session }) {
 
   const fetchPaymentSheetParams = async () => {
     // Create payment session for our customer
-    const { data, error } = await functions.invoke("payment-sheet", {
-      headers: {
-        Authorization: `Bearer ${session.access_token}`,
-      },
-      url: "https://lazy-pheasant-42.deno.dev",
+    const { data, error } = await supabase.functions.invoke("payment-sheet", {
+      responseType: "json",
     });
     console.log(data, error);
-    const { paymentIntent, ephemeralKey, customer } = data;
+    const { paymentIntent, ephemeralKey, customer } = data as any; // TODO: remove after client lib is fixed
     setClientSecret(paymentIntent);
     return {
       paymentIntent,

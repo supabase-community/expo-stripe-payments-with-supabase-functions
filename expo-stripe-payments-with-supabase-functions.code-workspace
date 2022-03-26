@@ -10,14 +10,14 @@
     },
     {
       "name": "supabase-functions",
-      "path": "functions"
+      "path": "supabase/functions"
     }
   ],
   "settings": {
     "files.exclude": {
       "node_modules/": true,
       "app/": true,
-      "functions/": true
+      "supabase/functions/": true
     }
   }
 }
