@@ -20,6 +20,7 @@ const stripe = Stripe(
   }
 );
 
+const corsHeaders = { "Access-Control-Allow-Origin": "*" };
 const server = Deno.listen({ port: 8000 });
 console.log(`HTTP webserver running.  Access it at:  http://localhost:8000/`);
 
@@ -38,7 +39,11 @@ const handler: Handler = async (request) => {
   // @ts-expect-error: deno doenst like that Postgrestfilterbuilder doesn't return a promise
   const { data, error } = await supabase.from("customers").select("*").single();
   console.log(data, error);
-  if (error) return new Response(JSON.stringify(error), { status: 200 });
+  if (error)
+    return new Response(JSON.stringify(error), {
+      status: 200,
+      headers: corsHeaders,
+    });
   const customer = data.stripe_customer_id;
 
   const ephemeralKey = await stripe.ephemeralKeys.create(
@@ -56,7 +61,10 @@ const handler: Handler = async (request) => {
     customer: customer,
   };
 
-  return new Response(JSON.stringify(res), { status: 200 });
+  return new Response(JSON.stringify(res), {
+    status: 200,
+    headers: corsHeaders,
+  });
 };
 
 await serveListener(server, handler);
