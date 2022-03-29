@@ -37,6 +37,7 @@ export default function PaymentScreen({ session }: { session: Session }) {
       responseType: "json",
     });
     console.log(data, error);
+    if (error) Alert.alert(`Error: ${error.message}`);
     const { paymentIntent, ephemeralKey, customer } = data as any; // TODO: remove after client lib is fixed
     setClientSecret(paymentIntent);
     return {
@@ -90,6 +91,7 @@ export default function PaymentScreen({ session }: { session: Session }) {
       address: address,
     };
 
+    if (!paymentIntent) return setLoading(false);
     const { error } = await initPaymentSheet({
       customerId: customer,
       customerEphemeralKeySecret: ephemeralKey,
