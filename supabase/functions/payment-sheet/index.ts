@@ -2,30 +2,15 @@ import {
   serveListener,
   Handler,
 } from "https://deno.land/std@0.116.0/http/server.ts";
-
-// esm.sh is used to compile stripe-node to be compatible with ES modules.
-import Stripe from "https://esm.sh/stripe?target=deno&no-check";
-
+import { stripe } from "../_utils/utils.ts";
 // Import Supabase client
-import { createClient } from "https://cdn.skypack.dev/@supabase/supabase-js@^1.31.2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@^1.33.1";
 
-const stripe = Stripe(
-  // TODO move to env var
-  "sk_test_51Kfs8gAi5HDX2lYC3f7a7QYIznGO7SOA0z1MrH3hKo7jkDD7jHaocBIInUd8RRkYJpWzvfuFfw0dxqdXmCPJB70O00DKB6amN4",
-  {
-    // This is needed to use the Fetch API rather than relying on the Node http
-    // package.
-    httpClient: Stripe.createFetchHttpClient(),
-    apiVersion: "2020-08-27",
-  }
-);
-
-const corsHeaders = { "Access-Control-Allow-Origin": "*" };
 const server = Deno.listen({ port: 8000 });
 console.log(`HTTP webserver running.  Access it at:  http://localhost:8000/`);
 
 // This handler will be called for every incoming request.
-const handler: Handler = async (request) => {
+const handler: Handler = async (req) => {
   const supabase = createClient(
     // Supabase API URL
     "https://cqhkqitntobmsugnbkjr.supabase.co",
@@ -33,17 +18,12 @@ const handler: Handler = async (request) => {
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxaGtxaXRudG9ibXN1Z25ia2pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDgyMDMxNDQsImV4cCI6MTk2Mzc3OTE0NH0.QmrUf2J_cGvhilFI7DvrX0re4qb_STaQKcOw83P-KH0",
     // Create client with Auth context of the user that called the function.
     // This way your row-level-security (RLS) policies are applied.
-    { headers: { Authorization: request.headers.get("Authorization") } }
+    { headers: { Authorization: req.headers.get("Authorization") ?? "" } }
   );
 
-  // @ts-expect-error: deno doenst like that Postgrestfilterbuilder doesn't return a promise
   const { data, error } = await supabase.from("customers").select("*").single();
   console.log(data, error);
-  if (error)
-    return new Response(JSON.stringify(error), {
-      status: 200,
-      headers: corsHeaders,
-    });
+  if (error) return new Response(JSON.stringify(error), { status: 200 });
   const customer = data.stripe_customer_id;
 
   const ephemeralKey = await stripe.ephemeralKeys.create(
@@ -61,10 +41,7 @@ const handler: Handler = async (request) => {
     customer: customer,
   };
 
-  return new Response(JSON.stringify(res), {
-    status: 200,
-    headers: corsHeaders,
-  });
+  return new Response(JSON.stringify(res), { status: 200 });
 };
 
 await serveListener(server, handler);
