@@ -12,10 +12,10 @@ console.log(`HTTP webserver running.  Access it at:  http://localhost:8000/`);
 // This handler will be called for every incoming request.
 const handler: Handler = async (req) => {
   const supabase = createClient(
-    // Supabase API URL
-    "https://cqhkqitntobmsugnbkjr.supabase.co",
-    // Supabase API ANON KEY
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxaGtxaXRudG9ibXN1Z25ia2pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDgyMDMxNDQsImV4cCI6MTk2Mzc3OTE0NH0.QmrUf2J_cGvhilFI7DvrX0re4qb_STaQKcOw83P-KH0",
+    // Supabase API URL - env var exported by default when deployed.
+    Deno.env.get("SUPABASE_URL") ?? "",
+    // Supabase API ANON KEY - env var exported by default when deployed.
+    Deno.env.get("SUPABASE_ANON_KEY") ?? "",
     // Create client with Auth context of the user that called the function.
     // This way your row-level-security (RLS) policies are applied.
     { headers: { Authorization: req.headers.get("Authorization") ?? "" } }
@@ -36,6 +36,7 @@ const handler: Handler = async (req) => {
     customer: customer,
   });
   const res = {
+    stripe_pk: Deno.env.get("STRIPE_PUBLISHABLE_KEY"),
     paymentIntent: paymentIntent.client_secret,
     ephemeralKey: ephemeralKey.secret,
     customer: customer,

@@ -18,13 +18,6 @@ export default function PaymentScreen({ session }: { session: Session }) {
 
   useEffect(() => {
     async function initialize() {
-      await initStripe({
-        publishableKey:
-          "pk_test_51Kfs8gAi5HDX2lYCEk2a1c9k1w3VDToYIhk9IdwyCFlPLqilrKZvol8JgQbiAXr222uQjo4nOCehfv3Z8LMGYmRn0025a0amdt",
-        merchantIdentifier: "merchant.com.stripe.react.native",
-        urlScheme: "supabase-stripe-example",
-        setUrlSchemeOnAndroid: true,
-      });
       initialisePaymentSheet();
     }
     initialize();
@@ -37,13 +30,17 @@ export default function PaymentScreen({ session }: { session: Session }) {
       responseType: "json",
     });
     console.log(data, error);
-    if (error) Alert.alert(`Error: ${error.message}`);
-    const { paymentIntent, ephemeralKey, customer } = data as any; // TODO: remove after client lib is fixed
+    if (error) {
+      Alert.alert(`Error: ${error.message}`);
+      return {};
+    }
+    const { paymentIntent, ephemeralKey, customer, stripe_pk } = data;
     setClientSecret(paymentIntent);
     return {
       paymentIntent,
       ephemeralKey,
       customer,
+      stripe_pk,
     };
   };
 
@@ -73,8 +70,17 @@ export default function PaymentScreen({ session }: { session: Session }) {
 
   const initialisePaymentSheet = async () => {
     setLoading(true);
-    const { paymentIntent, ephemeralKey, customer } =
+    const { paymentIntent, ephemeralKey, customer, stripe_pk } =
       await fetchPaymentSheetParams();
+
+    if (!stripe_pk || !paymentIntent) return setLoading(false);
+
+    await initStripe({
+      publishableKey: stripe_pk,
+      merchantIdentifier: "merchant.com.stripe.react.native",
+      urlScheme: "supabase-stripe-example",
+      setUrlSchemeOnAndroid: true,
+    });
 
     const address: PaymentSheet.Address = {
       city: "San Francisco",
@@ -91,7 +97,6 @@ export default function PaymentScreen({ session }: { session: Session }) {
       address: address,
     };
 
-    if (!paymentIntent) return setLoading(false);
     const { error } = await initPaymentSheet({
       customerId: customer,
       customerEphemeralKeySecret: ephemeralKey,
