@@ -43,10 +43,10 @@ Supabase Functions are written in TypeScript, run via Deno, and deployed with th
   - `cd app`
   - `yarn`
   - `yarn start` or `yarn ios` or `yarn android`
-- Make some test 💰🥳
+- Make some test moneys 💰🧧💵
 - Stop local development
   - Kill the "supabase functions serve watcher" (ctrl + c)
-  - Run `supabase stop` to stop the Docker images.
+  - Run `supabase stop` to stop the Docker containers.
 
 ### Deploy
 
