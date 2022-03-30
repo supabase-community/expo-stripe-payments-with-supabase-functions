@@ -2,6 +2,8 @@
 
 This is a Expo React Native Supabase example app, showing how to process payments with Supabase Functions for authenticated customers.
 
+![Demo gif](./demo.gif)
+
 ## Setup
 
 ### Create new Supabase project
@@ -27,7 +29,8 @@ Supabase Functions are written in TypeScript, run via Deno, and deployed with th
   - Navigate to https://app.supabase.io/account/tokens
   - Click "Generate New Token"
   - Copy newly created token
-  - run `supabase login sbp_xxxx`
+  - run `supabase login`
+  - Input your token when prompted
 - Link your project
   - Within your project root run `supabase link --ref your-project-ref`
 
@@ -39,7 +42,7 @@ Supabase Functions are written in TypeScript, run via Deno, and deployed with th
   - `cd app`
   - `yarn`
   - `yarn start` or `yarn ios` or `yarn android`
-- Start Stripe webhook forwarding (TODO)
+- Make some test 💰🥳
 
 ### Deploy
 
