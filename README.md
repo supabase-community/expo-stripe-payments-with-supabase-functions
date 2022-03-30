@@ -36,13 +36,17 @@ Supabase Functions are written in TypeScript, run via Deno, and deployed with th
 
 ### Develop locally
 
+- Run `supabase start` (make sure your Docker daemon is running.)
 - Run `supabase functions serve --env-file .env payment-sheet`
   - NOTE: no need to specify `SUPABASE_URL` and `SUPABASE_ANON_KEY` as they are automatically supplied for you from the linked project.
-- Run the Expo app:
+- Run the Expo app in a separate terminal window:
   - `cd app`
   - `yarn`
   - `yarn start` or `yarn ios` or `yarn android`
 - Make some test 💰🥳
+- Stop local development
+  - Kill the "supabase functions serve watcher" (ctrl + c)
+  - Run `supabase stop` to stop the Docker images.
 
 ### Deploy
 
@@ -51,6 +55,7 @@ Supabase Functions are written in TypeScript, run via Deno, and deployed with th
   - You can run `supabase secrets list` to check that it worked and also to see what other env vars are set by default.
 - Deploy the function
   - Within your project root run `supabase functions deploy payment-sheet`
+- In youre [`./app/.env`](./app/.env) file remove the `SUPA_FUNCTION_LOCALHOST` variable and restart your Expo app.
 
 ## 👁⚡️👁
 
