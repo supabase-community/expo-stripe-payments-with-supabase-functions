@@ -2,29 +2,19 @@ import {
   serveListener,
   Handler,
 } from "https://deno.land/std@0.116.0/http/server.ts";
-import { stripe } from "../_utils/utils.ts";
-// Import Supabase client
-import { createClient } from "https://esm.sh/@supabase/supabase-js@^1.33.1";
+import { stripe, createOrRetrieveCustomer } from "../_utils/utils.ts";
 
 const server = Deno.listen({ port: 8000 });
 console.log(`HTTP webserver running.  Access it at:  http://localhost:8000/`);
 
 // This handler will be called for every incoming request.
 const handler: Handler = async (req) => {
-  const supabase = createClient(
-    // Supabase API URL - env var exported by default when deployed.
-    Deno.env.get("SUPABASE_URL") ?? "",
-    // Supabase API ANON KEY - env var exported by default when deployed.
-    Deno.env.get("SUPABASE_ANON_KEY") ?? "",
-    // Create client with Auth context of the user that called the function.
-    // This way your row-level-security (RLS) policies are applied.
-    { headers: { Authorization: req.headers.get("Authorization") ?? "" } }
-  );
+  const authHeader = req.headers.get("Authorization")!;
+  const customer = await createOrRetrieveCustomer(authHeader);
+  return new Response(JSON.stringify(customer), { status: 200 });
 
-  const { data, error } = await supabase.from("customers").select("*").single();
-  console.log(data, error);
   if (error) return new Response(JSON.stringify(error), { status: 200 });
-  const customer = data.stripe_customer_id;
+  // const customer = data.stripe_customer_id;
 
   const ephemeralKey = await stripe.ephemeralKeys.create(
     { customer: customer },
