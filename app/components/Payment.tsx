@@ -10,6 +10,13 @@ import { Button } from "react-native-elements";
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
 
+interface FunctionResponse {
+  paymentIntent: string;
+  ephemeralKey: string;
+  customer: string;
+  stripe_pk: string;
+}
+
 export default function PaymentScreen({ session }: { session: Session }) {
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [paymentSheetEnabled, setPaymentSheetEnabled] = useState(false);
@@ -26,9 +33,12 @@ export default function PaymentScreen({ session }: { session: Session }) {
 
   const fetchPaymentSheetParams = async () => {
     // Create payment session for our customer
-    const { data, error } = await supabase.functions.invoke("payment-sheet", {
-      responseType: "json",
-    });
+    const { data, error } = await supabase.functions.invoke<FunctionResponse>(
+      "payment-sheet",
+      {
+        responseType: "json",
+      }
+    );
     console.log(data, error);
     if (error) {
       Alert.alert(`Error: ${error.message}`);
