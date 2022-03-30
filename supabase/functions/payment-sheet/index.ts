@@ -1,16 +1,12 @@
-import {
-  serveListener,
-  Handler,
-} from "https://deno.land/std@0.116.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.131.0/http/server.ts";
 import { stripe } from "../_utils/utils.ts";
 // Import Supabase client
 import { createClient } from "https://esm.sh/@supabase/supabase-js@^1.33.1";
 
-const server = Deno.listen({ port: 8000 });
-console.log(`HTTP webserver running.  Access it at:  http://localhost:8000/`);
-
 // This handler will be called for every incoming request.
-const handler: Handler = async (req) => {
+console.log("payment-sheet handler up and running!");
+serve(async (req) => {
+  console.log("Request received", req);
   const supabase = createClient(
     // Supabase API URL - env var exported by default when deployed.
     Deno.env.get("SUPABASE_URL") ?? "",
@@ -43,6 +39,4 @@ const handler: Handler = async (req) => {
   };
 
   return new Response(JSON.stringify(res), { status: 200 });
-};
-
-await serveListener(server, handler);
+});
