@@ -12,8 +12,12 @@ This is a Expo React Native Supabase example app, showing how to process payment
 
 ### Setup env vars
 
-- `cp .env.example .env`
-- Fill in your Stripe API keys from https://stripe.com/docs/development/quickstart#api-keys
+- Set up env vars for Supabase Functions:
+  - `cp .env.example .env`
+  - Fill in your Stripe API keys from https://stripe.com/docs/development/quickstart#api-keys
+- Set up env vars for the Expo app:
+  - `cp app/.env.example app/.env`
+  - Fill in your _public_ Supabase keys from https://app.supabase.io/project/_/settings/api
 
 ### Supabase Functions
 
@@ -27,18 +31,17 @@ Supabase Functions are written in TypeScript, run via Deno, and deployed with th
 - Link your project
   - Within your project root run `supabase link --ref your-project-ref`
 
-#### Develop locally
+### Develop locally
 
-- Run `supabase functions serve --env-file .env payment-sheet` 
-  - (Note: no need to specify SUPABASE_URL or SUPABASE_ANON_KEY as they are automatically supplied for you from the linked project).
+- Run `supabase functions serve --env-file .env payment-sheet`
+  - NOTE: no need to specify `SUPABASE_URL` and `SUPABASE_ANON_KEY` as they are automatically supplied for you from the linked project.
 - Run the Expo app:
   - `cd app`
   - `yarn`
   - `yarn start` or `yarn ios` or `yarn android`
 - Start Stripe webhook forwarding (TODO)
 
-
-#### Deploy
+### Deploy
 
 - Set up your secrets
   - Run `supabase secrets set --from-stdin < .env` to set the env vars from your `.env` file.
@@ -46,3 +49,10 @@ Supabase Functions are written in TypeScript, run via Deno, and deployed with th
 - Deploy the function
   - Within your project root run `supabase functions deploy payment-sheet`
 
+## 👁⚡️👁
+
+// TODO add docs links
+
+\o/ That's it, you can now invoke your Supabase Function via the [`supabase-js`]() and [`supabase-dart`]() client libraries. (More client libraries coming soon. Check the [supabase-community](https://github.com/supabase-community#client-libraries) org for details).
+
+For more info on Supabase Functions, check out the [docs]() and the [examples]().
