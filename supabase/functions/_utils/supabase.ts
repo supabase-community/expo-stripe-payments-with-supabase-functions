@@ -4,25 +4,23 @@ import { jwtDecoder } from "./utils.ts";
 // Import Supabase client
 import { createClient } from "https://esm.sh/@supabase/supabase-js@^1.33.1";
 
-const supabaseAdmin = createClient(
+const supabaseClient = createClient(
   // Supabase API URL - env var exported by default.
   Deno.env.get("SUPABASE_URL") ?? "",
-  // Supabase API SERVICE ROLE KEY - env var exported by default.
-  // WARNING: The service role key has admin priviliges and should only be used in secure server environments!
+  // Supabase API ANON KEY - env var exported by default.
+  Deno.env.get("SUPABASE_ANON_KEY") ?? ""
+);
+
+// WARNING: The service role key has admin priviliges and should only be used in secure server environments!
+const supabaseAdmin = createClient(
+  Deno.env.get("SUPABASE_URL") ?? "",
   Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
 );
 
 export const createOrRetrieveCustomer = async (authHeader: string) => {
-  // Create a Supabase client with the Auth context of the logged in user.
-  const supabaseClient = createClient(
-    // Supabase API URL - env var exported by default.
-    Deno.env.get("SUPABASE_URL") ?? "",
-    // Supabase API ANON KEY - env var exported by default.
-    Deno.env.get("SUPABASE_ANON_KEY") ?? "",
-    // Create client with Auth context of the user that called the function.
-    // This way your row-level-security (RLS) policies are applied.
-    { headers: { Authorization: authHeader } }
-  );
+  // Set the Auth context of the user that called the function.
+  // This way your row-level-security (RLS) policies are applied.
+  supabaseClient.auth.setAuth(authHeader.split("Bearer ")[1]);
 
   // Check if the user already has a Stripe customer ID in the Database.
   const { data, error } = await supabaseClient

@@ -21,18 +21,9 @@ This is a Expo React Native Supabase example app, showing how to process payment
   - `cp app/.env.example app/.env`
   - Fill in your _public_ Supabase keys from https://app.supabase.io/project/_/settings/api
 
-### Supabase Functions
+### Supabase Edge Functions
 
-Supabase Functions are written in TypeScript, run via Deno, and deployed with the Supabase CLI. Please [download](https://github.com/supabase/cli#install-the-cli) the latest version of the Supabase CLI, or [upgrade](https://github.com/supabase/cli#install-the-cli) it if you have it already installed.
-
-- Generate access token and log in to CLI
-  - Navigate to https://app.supabase.io/account/tokens
-  - Click "Generate New Token"
-  - Copy newly created token
-  - run `supabase login`
-  - Input your token when prompted
-- Link your project
-  - Within your project root run `supabase link --ref your-project-ref`
+[Supabase Edge Functions](https://supabase.com/edge-functions) are written in TypeScript, run via Deno, and deployed with the Supabase CLI. Please [download](https://github.com/supabase/cli#install-the-cli) the latest version of the Supabase CLI, or [upgrade](https://github.com/supabase/cli#install-the-cli) it if you have it already installed.
 
 ### Develop locally
 
@@ -50,6 +41,14 @@ Supabase Functions are written in TypeScript, run via Deno, and deployed with th
 
 ### Deploy
 
+- Generate access token and log in to CLI
+  - Navigate to https://app.supabase.io/account/tokens
+  - Click "Generate New Token"
+  - Copy newly created token
+  - run `supabase login`
+  - Input your token when prompted
+- Link your project
+  - Within your project root run `supabase link --project-ref your-project-ref`
 - Set up your secrets
   - Run `supabase secrets set --from-stdin < .env` to set the env vars from your `.env` file.
   - You can run `supabase secrets list` to check that it worked and also to see what other env vars are set by default.
