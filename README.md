@@ -59,8 +59,6 @@ Supabase Functions are written in TypeScript, run via Deno, and deployed with th
 
 ## 👁⚡️👁
 
-// TODO add docs links
+\o/ That's it, you can now invoke your Supabase Function via the [`supabase-js`](https://supabase.com/docs/reference/javascript/invoke) and [`supabase-dart`](https://supabase.com/docs/reference/dart/invoke) client libraries. (More client libraries coming soon. Check the [supabase-community](https://github.com/supabase-community#client-libraries) org for details).
 
-\o/ That's it, you can now invoke your Supabase Function via the [`supabase-js`]() and [`supabase-dart`]() client libraries. (More client libraries coming soon. Check the [supabase-community](https://github.com/supabase-community#client-libraries) org for details).
-
-For more info on Supabase Functions, check out the [docs]() and the [examples]().
+For more info on Supabase Functions, check out the [docs](https://supabase.com/docs/guides/functions) and the [examples](https://github.com/supabase/supabase/tree/master/examples/edge-functions).

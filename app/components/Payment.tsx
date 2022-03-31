@@ -7,7 +7,6 @@ import {
 } from "@stripe/stripe-react-native";
 import { StyleSheet, View, Alert } from "react-native";
 import { Button } from "react-native-elements";
-import { Session } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabase";
 
 interface FunctionResponse {
@@ -17,7 +16,7 @@ interface FunctionResponse {
   stripe_pk: string;
 }
 
-export default function PaymentScreen({ session }: { session: Session }) {
+export default function PaymentScreen() {
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [paymentSheetEnabled, setPaymentSheetEnabled] = useState(false);
   const [loading, setLoading] = useState(true);

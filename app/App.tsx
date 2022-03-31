@@ -17,13 +17,5 @@ export default function App() {
     });
   }, []);
 
-  return (
-    <View>
-      {session && session.user ? (
-        <PaymentScreen key={session.user.id} session={session} />
-      ) : (
-        <Auth />
-      )}
-    </View>
-  );
+  return <View>{session && session.user ? <PaymentScreen /> : <Auth />}</View>;
 }
