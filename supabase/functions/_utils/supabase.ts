@@ -20,7 +20,7 @@ const supabaseAdmin = createClient(
 export const createOrRetrieveCustomer = async (authHeader: string) => {
   // Set the Auth context of the user that called the function.
   // This way your row-level-security (RLS) policies are applied.
-  supabaseClient.auth.setAuth(authHeader.split("Bearer ")[1]);
+  supabaseClient.auth.setAuth(authHeader.replace("Bearer ", ""));
 
   // Check if the user already has a Stripe customer ID in the Database.
   const { data, error } = await supabaseClient
@@ -36,7 +36,7 @@ export const createOrRetrieveCustomer = async (authHeader: string) => {
   }
   if (data?.length === 0) {
     // No customer yet, let's create it.
-    const jwt = authHeader.split("Bearer ")[1];
+    const jwt = authHeader.replace("Bearer ", "");
     const jwtUser = jwtDecoder(jwt);
     const { sub: uid, email } = jwtUser;
     // Create customer object in Stripe.
