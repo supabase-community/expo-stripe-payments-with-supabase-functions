@@ -10,7 +10,7 @@ serve(async (req) => {
     const authHeader = req.headers.get("Authorization")!;
 
     // Retrieve the logged in user's Stripe customer ID or create a new customer object for them.
-    // See ../_utils/utils.ts for the implementation.
+    // See ../_utils/supabase.ts for the implementation.
     const customer = await createOrRetrieveCustomer(authHeader);
 
     // Create an ephermeralKey so that the Stripe SDK can fetch the customer's stored payment methods.
