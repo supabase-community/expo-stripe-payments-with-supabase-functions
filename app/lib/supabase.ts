@@ -10,8 +10,10 @@ const supabaseAnonKey =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24ifQ.625_WdcF3KHqz5amU0x2X5WWHP-OEs_4qj0ssLNHzTs";
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  localStorage: AsyncStorage as any,
-  autoRefreshToken: true,
-  persistSession: true,
-  detectSessionInUrl: false,
+  auth: {
+    storage: AsyncStorage as any,
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: false,
+  },
 });
