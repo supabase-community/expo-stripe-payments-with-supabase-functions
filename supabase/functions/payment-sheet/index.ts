@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/std@0.131.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.132.0/http/server.ts";
 import { stripe } from "../_utils/stripe.ts";
 import { createOrRetrieveCustomer } from "../_utils/supabase.ts";
 
@@ -10,7 +10,7 @@ serve(async (req) => {
     const authHeader = req.headers.get("Authorization")!;
 
     // Retrieve the logged in user's Stripe customer ID or create a new customer object for them.
-    // See ../_utils/utils.ts for the implementation.
+    // See ../_utils/supabase.ts for the implementation.
     const customer = await createOrRetrieveCustomer(authHeader);
 
     // Create an ephermeralKey so that the Stripe SDK can fetch the customer's stored payment methods.
@@ -32,8 +32,14 @@ serve(async (req) => {
       ephemeralKey: ephemeralKey.secret,
       customer: customer,
     };
-    return new Response(JSON.stringify(res), { status: 200 });
+    return new Response(JSON.stringify(res), {
+      headers: { "Content-Type": "application/json" },
+      status: 200,
+    });
   } catch (error) {
-    return new Response(JSON.stringify(error), { status: 400 });
+    return new Response(JSON.stringify(error), {
+      headers: { "Content-Type": "application/json" },
+      status: 400,
+    });
   }
 });

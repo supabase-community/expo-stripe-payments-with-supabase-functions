@@ -33,14 +33,11 @@ export default function PaymentScreen() {
   const fetchPaymentSheetParams = async () => {
     // Create payment session for our customer
     const { data, error } = await supabase.functions.invoke<FunctionResponse>(
-      "payment-sheet",
-      {
-        responseType: "json",
-      }
+      "payment-sheet"
     );
     console.log(data, error);
-    if (error) {
-      Alert.alert(`Error: ${error.message}`);
+    if (!data || error) {
+      Alert.alert(`Error: ${error?.message ?? "no data"}`);
       return {};
     }
     const { paymentIntent, ephemeralKey, customer, stripe_pk } = data;
