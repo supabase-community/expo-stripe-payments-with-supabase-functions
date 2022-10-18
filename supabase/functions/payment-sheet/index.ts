@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/std@0.131.0/http/server.ts";
+import { serve } from "https://deno.land/std@0.132.0/http/server.ts";
 import { stripe } from "../_utils/stripe.ts";
 import { createOrRetrieveCustomer } from "../_utils/supabase.ts";
 
