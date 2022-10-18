@@ -32,8 +32,14 @@ serve(async (req) => {
       ephemeralKey: ephemeralKey.secret,
       customer: customer,
     };
-    return new Response(JSON.stringify(res), { status: 200 });
+    return new Response(JSON.stringify(res), {
+      headers: { "Content-Type": "application/json" },
+      status: 200,
+    });
   } catch (error) {
-    return new Response(JSON.stringify(error), { status: 400 });
+    return new Response(JSON.stringify(error), {
+      headers: { "Content-Type": "application/json" },
+      status: 400,
+    });
   }
 });
