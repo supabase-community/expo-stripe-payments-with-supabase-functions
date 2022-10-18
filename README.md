@@ -50,7 +50,7 @@ This is a Expo React Native Supabase example app, showing how to process payment
 - Link your project
   - Within your project root run `supabase link --project-ref your-project-ref`
 - Set up your secrets
-  - Run `supabase secrets set --from-stdin < .env` to set the env vars from your `.env` file.
+  - Run `supabase secrets set --env-file .env` to set the env vars from your `.env` file.
   - You can run `supabase secrets list` to check that it worked and also to see what other env vars are set by default.
 - Deploy the function
   - Within your project root run `supabase functions deploy payment-sheet`
